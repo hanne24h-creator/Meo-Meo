@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Học từ vựng tiếng Trung</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#222;--mute:#777;--pri:#c0392b;--pri2:#e74c3c;--ok:#27ae60;--bad:#c0392b;--line:#e3ded3;--shadow:0 4px 14px rgba(0,0,0,.08)}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--pri);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+header h1{font-size:1.15rem;margin:0}
+header .count{font-size:.85rem;opacity:.9}
+nav{display:flex;gap:4px;padding:8px;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto;position:sticky;top:0;z-index:5}
+nav button{flex:1;min-width:90px;padding:10px 8px;border:0;background:transparent;border-radius:8px;font-size:.95rem;cursor:pointer;color:var(--ink)}
+nav button.active{background:var(--pri);color:#fff}
+main{max-width:760px;margin:0 auto;padding:16px}
+section{display:none}
+section.active{display:block}
+.btn{padding:9px 14px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;font-size:.92rem;color:var(--ink)}
+.btn:hover{border-color:var(--pri)}
+.btn.pri{background:var(--pri);color:#fff;border-color:var(--pri)}
+.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn.bad{background:#fff;color:var(--bad);border-color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.row.center{justify-content:center}
+select,input[type=text],input[type=number],textarea{padding:8px;border:1px solid var(--line);border-radius:8px;font-size:.95rem;font-family:inherit;background:#fff}
+textarea{width:100%;min-height:140px}
+.muted{color:var(--mute);font-size:.88rem}
+
+/* flashcard */
+.scene{perspective:1000px;margin:12px auto;max-width:460px}
+.card{position:relative;height:300px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border-radius:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.face.back{transform:rotateY(180deg)}
+.hanzi{font-size:5rem;line-height:1.1;font-family:"Noto Serif SC","Songti SC","SimSun",serif}
+.pinyin{font-size:1.5rem;color:var(--pri);margin-top:6px}
+.meaning{font-size:1.5rem;margin-top:10px}
+.hint{position:absolute;bottom:10px;font-size:.78rem;color:var(--mute)}
+.progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:8px 0}
+.progress>div{height:100%;background:var(--pri);width:0;transition:width .3s}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.75rem;background:#e8f6ee;color:var(--ok);margin-left:6px}
+
+/* quiz */
+.qbox{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:20px;text-align:center}
+.qprompt{font-size:3rem;min-height:70px;font-family:"Noto Serif SC","Songti SC",serif;margin:6px 0}
+.qprompt.small{font-size:1.6rem;font-family:inherit}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media(max-width:520px){.opts{grid-template-columns:1fr}.hanzi{font-size:4rem}}
+.opt{padding:14px;border:2px solid var(--line);border-radius:10px;background:#fff;font-size:1.05rem;cursor:pointer;font-family:inherit}
+.opt.han{font-size:1.8rem;font-family:"Noto Serif SC","Songti SC",serif}
+.opt:hover{border-color:var(--pri)}
+.opt.correct{background:#e8f6ee;border-color:var(--ok)}
+.opt.wrong{background:#fdecea;border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.result{text-align:center;padding:24px;background:#fff;border-radius:16px;box-shadow:var(--shadow)}
+.result .score{font-size:3rem;color:var(--pri);font-weight:700}
+.wrongs{text-align:left;margin-top:12px;font-size:.95rem}
+
+/* practice */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcol{display:flex;flex-direction:column;gap:8px}
+.mitem{padding:12px;border:2px solid var(--line);border-radius:10px;background:#fff;font-size:1.05rem;cursor:pointer;font-family:inherit;color:var(--ink)}
+.mitem.h{font-size:1.6rem;font-family:"Noto Serif SC","Songti SC",serif}
+.mitem.sel{border-color:var(--pri);background:#fdf3f1}
+.mitem.done{background:#e8f6ee;border-color:var(--ok);cursor:default;opacity:.7}
+.mitem.wrong{background:#fdecea;border-color:var(--bad)}
+.pinput{width:100%;font-size:1.3rem;text-align:center;margin-top:10px}
+.fb{min-height:48px;margin-top:10px;font-size:1.05rem}
+/* writer */
+.wbox{display:flex;flex-direction:column;align-items:center}
+#writerTarget{background:#fff;border-radius:12px;box-shadow:var(--shadow);width:280px;height:280px;background-image:linear-gradient(#e9e4d8 1px,transparent 1px),linear-gradient(90deg,#e9e4d8 1px,transparent 1px);background-size:50% 50%;position:relative}
+#writerTarget svg{position:relative}
+.chars{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;justify-content:center}
+.chars button{font-size:1.6rem;padding:4px 12px;font-family:"Noto Serif SC","Songti SC",serif}
+.chars button.active{background:var(--pri);color:#fff;border-color:var(--pri)}
+
+/* list */
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;font-size:.95rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{background:#faf8f3}
+td.h{font-size:1.4rem;font-family:"Noto Serif SC","Songti SC",serif}
+.tiny{padding:3px 8px;font-size:.8rem}
+.panel{background:#fff;border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:14px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 18px;border-radius:20px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10;max-width:90%}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>📚 Học từ vựng tiếng Trung</h1>
+  <div class="count" id="hdrCount"></div>
+</header>
+<nav id="nav">
+  <button data-tab="flash" class="active">🃏 Flashcard</button>
+  <button data-tab="quiz">✅ Trắc nghiệm</button>
+  <button data-tab="prac">🏋️ Luyện tập</button>
+  <button data-tab="write">✍️ Nét chữ</button>
+  <button data-tab="data">📂 Dữ liệu</button>
+</nav>
+
+<main>
+<!-- FLASHCARD -->
+<section id="tab-flash" class="active">
+  <div class="row">
+    <select id="fFilter">
+      <option value="all">Tất cả từ</option>
+      <option value="unknown">Chưa thuộc</option>
+      <option value="known">Đã thuộc</option>
+    </select>
+    <select id="fFront">
+      <option value="han">Mặt trước: Chữ Hán</option>
+      <option value="mean">Mặt trước: Nghĩa</option>
+    </select>
+    <button class="btn" id="fShuffle">🔀 Trộn</button>
+    <label class="muted"><input type="checkbox" id="fAuto" checked> Tự đọc</label>
+  </div>
+  <div class="progress"><div id="fBar"></div></div>
+  <div class="muted" id="fInfo" style="text-align:center"></div>
+  <div class="scene"><div class="card" id="card">
+    <div class="face front" id="cardFront"></div>
+    <div class="face back" id="cardBack"></div>
+  </div></div>
+  <div class="row center">
+    <button class="btn" id="fPrev">◀ Trước</button>
+    <button class="btn" id="fSpeak">🔊 Phát âm</button>
+    <button class="btn" id="fStroke">✍️ Nét chữ</button>
+    <button class="btn" id="fNext">Sau ▶</button>
+  </div>
+  <div class="row center">
+    <button class="btn bad" id="fUnknown">✗ Chưa thuộc</button>
+    <button class="btn ok" id="fKnown">✓ Đã thuộc</button>
+  </div>
+  <div class="row center">
+    <span class="muted">Tốc độ đọc:</span>
+    <input type="range" id="rate" min="0.5" max="1.2" step="0.1" value="0.8">
+    <span class="muted" id="rateVal">0.8x</span>
+  </div>
+  <p class="muted" style="text-align:center">Phím tắt: ← → chuyển thẻ · Space lật thẻ · S phát âm</p>
+</section>
+
+<!-- QUIZ -->
+<section id="tab-quiz">
+  <div class="panel" id="quizSetup">
+    <div class="row">
+      <label>Dạng câu hỏi:
+        <select id="qMode">
+          <option value="h2m">Chữ Hán → Nghĩa</option>
+          <option value="m2h">Nghĩa → Chữ Hán</option>
+          <option value="p2h">Pinyin → Chữ Hán</option>
+          <option value="a2m">Nghe → Chọn nghĩa</option>
+          <option value="a2h">Nghe → Chọn chữ Hán</option>
+          <option value="mix">Trộn tất cả</option>
+        </select>
+      </label>
+    </div>
+    <div class="row">
+      <label>Số câu: <input type="number" id="qCount" value="10" min="1" max="200" style="width:80px"></label>
+      <label>Phạm vi:
+        <select id="qScope">
+          <option value="all">Tất cả từ</option>
+          <option value="unknown">Chỉ từ chưa thuộc</option>
+        </select>
+      </label>
+    </div>
+    <button class="btn pri" id="qStart">▶ Bắt đầu</button>
+  </div>
+  <div id="quizPlay" style="display:none">
+    <div class="progress"><div id="qBar"></div></div>
+    <div class="muted" id="qInfo" style="text-align:center"></div>
+    <div class="qbox">
+      <div class="qprompt" id="qPrompt"></div>
+      <div class="row center"><button class="btn" id="qSpeak">🔊 Nghe</button></div>
+      <div class="opts" id="qOpts"></div>
+      <div class="row center"><button class="btn pri" id="qNext" style="display:none">Câu tiếp ▶</button></div>
+    </div>
+  </div>
+  <div id="quizResult" style="display:none"></div>
+</section>
+
+<!-- PRACTICE -->
+<section id="tab-prac">
+  <div class="panel" id="pSetup">
+    <h3 style="margin-top:0">Bài tập luyện thêm</h3>
+    <div class="row">
+      <label>Dạng bài:
+        <select id="pType">
+          <option value="match">🧩 Ghép cặp Hán – Nghĩa</option>
+          <option value="pinyin">⌨️ Nhìn chữ Hán – gõ pinyin</option>
+          <option value="meaning">⌨️ Nhìn chữ Hán – gõ nghĩa tiếng Việt</option>
+          <option value="dict">🎧 Nghe – gõ pinyin (chính tả)</option>
+          <option value="hanzi">⌨️ Nhìn nghĩa – gõ chữ Hán</option>
+        </select>
+      </label>
+    </div>
+    <div class="row">
+      <label>Số câu (ghép cặp: số cặp, tối đa 8): <input type="number" id="pCount" value="8" min="2" max="200" style="width:80px"></label>
+      <label>Phạm vi:
+        <select id="pScope">
+          <option value="all">Tất cả từ</option>
+          <option value="unknown">Chỉ từ chưa thuộc</option>
+        </select>
+      </label>
+    </div>
+    <button class="btn pri" id="pStart">▶ Bắt đầu</button>
+  </div>
+  <div id="pPlay" style="display:none"></div>
+</section>
+
+<!-- WRITER -->
+<section id="tab-write">
+  <div class="row center">
+    <select id="wSelect" style="max-width:100%"></select>
+    <span class="muted">hoặc nhập chữ:</span>
+    <input type="text" id="wInput" placeholder="你好" style="width:120px">
+    <button class="btn" id="wGo">Xem</button>
+  </div>
+  <div class="wbox">
+    <div class="chars" id="wChars"></div>
+    <div id="writerTarget"></div>
+    <div class="muted" id="wInfo" style="margin-top:8px"></div>
+    <div class="row center">
+      <button class="btn pri" id="wAnim">▶ Xem nét viết</button>
+      <button class="btn" id="wQuiz">✏️ Tập viết</button>
+      <button class="btn" id="wReset">↺ Làm lại</button>
+      <button class="btn" id="wOutline">👁 Ẩn/hiện nét mờ</button>
+      <button class="btn" id="wSpeak">🔊</button>
+    </div>
+    <div class="row center">
+      <span class="muted">Tốc độ nét:</span>
+      <input type="range" id="wSpeed" min="0.5" max="3" step="0.25" value="1">
+    </div>
+    <p class="muted" id="wStatus"></p>
+  </div>
+</section>
+
+<!-- DATA -->
+<section id="tab-data">
+  <div class="panel">
+    <h3 style="margin-top:0">Tải file dữ liệu</h3>
+    <p class="muted">Hỗ trợ <b>.csv, .tsv, .txt, .json</b>. Mỗi dòng: <code>chữ Hán, pinyin, nghĩa</code> (ngăn cách bằng dấu phẩy, tab, <code>|</code> hoặc <code>;</code>). JSON: mảng các object <code>{"hanzi","pinyin","meaning"}</code>.</p>
+    <div class="row">
+      <input type="file" id="fileIn" accept=".csv,.tsv,.txt,.json,text/*,application/json">
+      <label class="muted"><input type="checkbox" id="appendMode"> Thêm vào danh sách hiện có (không thay thế)</label>
+    </div>
+    <p class="muted">Hoặc dán trực tiếp vào đây:</p>
+    <textarea id="pasteArea" placeholder="你好, nǐ hǎo, xin chào&#10;谢谢, xièxie, cảm ơn"></textarea>
+    <div class="row">
+      <button class="btn pri" id="pasteBtn">Nạp dữ liệu</button>
+      <button class="btn" id="exportBtn">⬇ Xuất CSV</button>
+      <button class="btn" id="resetKnown">Xóa tiến độ "đã thuộc"</button>
+      <button class="btn bad" id="resetAll">Khôi phục dữ liệu mẫu</button>
+    </div>
+  </div>
+  <h3>Danh sách từ (<span id="listCount">0</span>)</h3>
+  <div class="row"><input type="text" id="search" placeholder="Tìm kiếm..." style="flex:1"></div>
+  <div style="overflow-x:auto"><table>
+    <thead><tr><th>Hán</th><th>Pinyin</th><th>Nghĩa</th><th></th></tr></thead>
+    <tbody id="listBody"></tbody>
+  </table></div>
+</section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const SAMPLE = [
+  {hanzi:'你好',pinyin:'nǐ hǎo',meaning:'xin chào'},
+  {hanzi:'谢谢',pinyin:'xièxie',meaning:'cảm ơn'},
+  {hanzi:'再见',pinyin:'zàijiàn',meaning:'tạm biệt'},
+  {hanzi:'学生',pinyin:'xuésheng',meaning:'học sinh'},
+  {hanzi:'老师',pinyin:'lǎoshī',meaning:'giáo viên'},
+  {hanzi:'中国',pinyin:'Zhōngguó',meaning:'Trung Quốc'},
+  {hanzi:'越南',pinyin:'Yuènán',meaning:'Việt Nam'},
+  {hanzi:'朋友',pinyin:'péngyou',meaning:'bạn bè'},
+  {hanzi:'喜欢',pinyin:'xǐhuan',meaning:'thích'},
+  {hanzi:'水',pinyin:'shuǐ',meaning:'nước'},
+  {hanzi:'吃饭',pinyin:'chī fàn',meaning:'ăn cơm'},
+  {hanzi:'今天',pinyin:'jīntiān',meaning:'hôm nay'}
+];
+let words = [];
+let known = new Set();
+
+/* ---------- storage ---------- */
+function save(){
+  try{
+    localStorage.setItem('hv_words', JSON.stringify(words));
+    localStorage.setItem('hv_known', JSON.stringify([...known]));
+  }catch(e){}
+}
+function load(){
+  try{
+    const w = JSON.parse(localStorage.getItem('hv_words')||'null');
+    words = Array.isArray(w) && w.length ? w : SAMPLE.slice();
+    known = new Set(JSON.parse(localStorage.getItem('hv_known')||'[]'));
+  }catch(e){ words = SAMPLE.slice(); known = new Set(); }
+}
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'),2200);
+}
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------- audio ---------- */
+let voices = [];
+function loadVoices(){ voices = (window.speechSynthesis && speechSynthesis.getVoices()) || []; }
+if(window.speechSynthesis){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+let rate = 0.8;
+function speak(text){
+  if(!window.speechSynthesis){ toast('Trình duyệt không hỗ trợ phát âm'); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN';
+  const v = voices.find(v=>/^zh[-_]CN/i.test(v.lang)) || voices.find(v=>/^zh/i.test(v.lang));
+  if(v) u.voice = v; else if(voices.length) toast('Máy chưa có giọng đọc tiếng Trung — hãy cài thêm trong cài đặt hệ thống');
+  u.rate = rate;
+  speechSynthesis.speak(u);
+}
+$('rate').addEventListener('input',e=>{ rate=parseFloat(e.target.value); $('rateVal').textContent=rate.toFixed(1)+'x'; });
+
+/* ---------- tabs ---------- */
+function showTab(name){
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('main section').forEach(s=>s.classList.toggle('active',s.id==='tab-'+name));
+  if(name==='write') initWriterTab();
+  if(name==='data') renderList();
+  if(name==='flash') buildDeck(false);
+}
+$('nav').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) showTab(b.dataset.tab); });
+
+/* ---------- flashcard ---------- */
+let deck=[], idx=0, flipped=false;
+function buildDeck(reset){
+  const f = $('fFilter').value;
+  const cur = deck[idx];
+  deck = words.filter(w => f==='all' ? true : f==='known' ? known.has(w.hanzi) : !known.has(w.hanzi));
+  if(reset || !cur){ idx=0; }
+  else { const k=deck.indexOf(cur); idx = k>=0?k:Math.min(idx,Math.max(deck.length-1,0)); }
+  renderCard(false);
+}
+function renderCard(autoSpeak){
+  const w = deck[idx];
+  $('hdrCount').textContent = words.length+' từ · đã thuộc '+[...words].filter(x=>known.has(x.hanzi)).length;
+  if(!w){
+    $('cardFront').innerHTML='<div class="meaning">Không có thẻ nào trong bộ lọc này</div>';
+    $('cardBack').innerHTML=''; $('fInfo').textContent=''; $('fBar').style.width='0';
+    return;
+  }
+  const front = $('fFront').value;
+  const hanHTML = `<div class="hanzi">${esc(w.hanzi)}</div>`;
+  const infoHTML = `<div class="pinyin">${esc(w.pinyin)}</div><div class="meaning">${esc(w.meaning)}</div>`;
+  const badge = known.has(w.hanzi) ? '<span class="badge">đã thuộc</span>' : '';
+  if(front==='han'){
+    $('cardFront').innerHTML = hanHTML + badge + '<div class="hint">Bấm để lật</div>';
+    $('cardBack').innerHTML = hanHTML + infoHTML;
+  }else{
+    $('cardFront').innerHTML = `<div class="meaning" style="font-size:2rem">${esc(w.meaning)}</div>` + badge + '<div class="hint">Bấm để lật</div>';
+    $('cardBack').innerHTML = hanHTML + infoHTML;
+  }
+  $('card').classList.remove('flipped'); flipped=false;
+  $('fInfo').textContent = `${idx+1} / ${deck.length}`;
+  $('fBar').style.width = ((idx+1)/deck.length*100)+'%';
+  if(autoSpeak && $('fAuto').checked) speak(w.hanzi);
+}
+function flip(){ if(!deck[idx]) return; flipped=!flipped; $('card').classList.toggle('flipped',flipped); }
+function go(d){ if(!deck.length) return; idx=(idx+d+deck.length)%deck.length; renderCard(true); }
+$('card').addEventListener('click',flip);
+$('fPrev').onclick=()=>go(-1);
+$('fNext').onclick=()=>go(1);
+$('fSpeak').onclick=()=>deck[idx]&&speak(deck[idx].hanzi);
+$('fStroke').onclick=()=>{ if(deck[idx]){ showTab('write'); setWriterWord(deck[idx].hanzi); } };
+$('fShuffle').onclick=()=>{ deck=shuffle(deck); idx=0; renderCard(false); toast('Đã trộn thẻ'); };
+$('fFilter').onchange=()=>buildDeck(true);
+$('fFront').onchange=()=>renderCard(false);
+$('fKnown').onclick=()=>{ const w=deck[idx]; if(!w)return; known.add(w.hanzi); save(); if($('fFilter').value==='unknown'){ deck.splice(idx,1); if(idx>=deck.length) idx=0; } else idx=(idx+1)%deck.length; renderCard(true); };
+$('fUnknown').onclick=()=>{ const w=deck[idx]; if(!w)return; known.delete(w.hanzi); save(); if($('fFilter').value==='known'){ deck.splice(idx,1); if(idx>=deck.length) idx=0; } else idx=(idx+1)%deck.length; renderCard(true); };
+document.addEventListener('keydown',e=>{
+  if(!$('tab-flash').classList.contains('active')) return;
+  if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+  if(e.key==='ArrowRight') go(1);
+  else if(e.key==='ArrowLeft') go(-1);
+  else if(e.key===' '){ e.preventDefault(); flip(); }
+  else if(e.key==='s'||e.key==='S') deck[idx]&&speak(deck[idx].hanzi);
+});
+
+/* ---------- quiz ---------- */
+let quiz=null;
+const MODES=['h2m','m2h','p2h','a2m','a2h'];
+function startQuiz(){
+  let pool = words.filter(w=> $('qScope').value==='all' ? true : !known.has(w.hanzi));
+  if(pool.length<1){ toast('Không có từ nào trong phạm vi này'); return; }
+  if(words.length<2){ toast('Cần ít nhất 2 từ để làm trắc nghiệm'); return; }
+  const n = Math.max(1, Math.min(parseInt($('qCount').value)||10, 200));
+  const picked = shuffle(pool).slice(0,n);
+  const mode = $('qMode').value;
+  quiz = { qs: picked.map(w=>makeQuestion(w, mode==='mix'?MODES[Math.floor(Math.random()*MODES.length)]:mode)), i:0, score:0, wrong:[] };
+  $('quizSetup').style.display='none'; $('quizResult').style.display='none'; $('quizPlay').style.display='block';
+  showQ();
+}
+function makeQuestion(w, mode){
+  const others = shuffle(words.filter(x=>x.hanzi!==w.hanzi));
+  const wantHan = (mode==='m2h'||mode==='p2h'||mode==='a2h');
+  const key = wantHan ? 'hanzi' : 'meaning';
+  const seen = new Set([w[key]]); const wrong=[];
+  for(const o of others){ if(!seen.has(o[key])){ seen.add(o[key]); wrong.push(o[key]); } if(wrong.length>=3) break; }
+  const options = shuffle([w[key], ...wrong]);
+  return { w, mode, options, answer:w[key], han:wantHan };
+}
+function showQ(){
+  const q = quiz.qs[quiz.i];
+  $('qInfo').textContent = `Câu ${quiz.i+1} / ${quiz.qs.length} · Điểm: ${quiz.score}`;
+  $('qBar').style.width = (quiz.i/quiz.qs.length*100)+'%';
+  const p=$('qPrompt'); p.classList.remove('small');
+  if(q.mode==='h2m') p.textContent=q.w.hanzi;
+  else if(q.mode==='m2h'){ p.textContent=q.w.meaning; p.classList.add('small'); }
+  else if(q.mode==='p2h'){ p.textContent=q.w.pinyin; p.classList.add('small'); }
+  else { p.textContent='🔊 Nghe và chọn'; p.classList.add('small'); }
+  $('qSpeak').style.display = (q.mode==='a2m'||q.mode==='a2h'||q.mode==='h2m') ? '' : 'none';
+  const box=$('qOpts'); box.innerHTML='';
+  q.options.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='opt'+(q.han?' han':''); b.textContent=o;
+    b.onclick=()=>answer(b,o);
+    box.appendChild(b);
+  });
+  $('qNext').style.display='none';
+  if(q.mode==='a2m'||q.mode==='a2h') setTimeout(()=>speak(q.w.hanzi),250);
+}
+function answer(btn,val){
+  const q = quiz.qs[quiz.i];
+  const ok = val===q.answer;
+  document.querySelectorAll('#qOpts .opt').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===q.answer) b.classList.add('correct');
+  });
+  if(ok){ quiz.score++; } else { btn.classList.add('wrong'); quiz.wrong.push(q.w); }
+  $('qInfo').textContent = `Câu ${quiz.i+1} / ${quiz.qs.length} · Điểm: ${quiz.score}`;
+  if(q.mode==='a2m'||q.mode==='a2h'){ $('qPrompt').classList.remove('small'); $('qPrompt').textContent=q.w.hanzi+' · '+q.w.pinyin; }
+  $('qNext').style.display=''; $('qNext').textContent = quiz.i+1>=quiz.qs.length ? 'Xem kết quả ▶' : 'Câu tiếp ▶';
+  $('qNext').focus();
+}
+$('qNext').onclick=()=>{ quiz.i++; if(quiz.i>=quiz.qs.length) endQuiz(); else showQ(); };
+$('qSpeak').onclick=()=>speak(quiz.qs[quiz.i].w.hanzi);
+$('qStart').onclick=startQuiz;
+function endQuiz(){
+  $('quizPlay').style.display='none';
+  const r=$('quizResult'); r.style.display='block';
+  const pct=Math.round(quiz.score/quiz.qs.length*100);
+  const uniq=[...new Map(quiz.wrong.map(w=>[w.hanzi,w])).values()];
+  r.innerHTML = `<div class="result"><div>Kết quả</div><div class="score">${quiz.score}/${quiz.qs.length}</div><div>${pct}% — ${pct>=80?'Tuyệt vời! 🎉':pct>=50?'Khá tốt, cố lên! 💪':'Cần ôn thêm nhé 📖'}</div>
+    ${uniq.length?`<div class="wrongs"><b>Các từ làm sai:</b><br>${uniq.map(w=>`${esc(w.hanzi)} (${esc(w.pinyin)}) — ${esc(w.meaning)}`).join('<br>')}</div>`:''}
+    <div class="row center" style="margin-top:14px"><button class="btn pri" id="qAgain">Làm lại</button>
+    ${uniq.length?'<button class="btn" id="qRetry">Luyện các từ sai</button>':''}</div></div>`;
+  $('qAgain').onclick=()=>{ r.style.display='none'; $('quizSetup').style.display='block'; };
+  if(uniq.length) $('qRetry').onclick=()=>{
+    const mode=$('qMode').value;
+    quiz={ qs: shuffle(uniq).map(w=>makeQuestion(w, mode==='mix'?MODES[Math.floor(Math.random()*MODES.length)]:mode)), i:0, score:0, wrong:[] };
+    r.style.display='none'; $('quizPlay').style.display='block'; showQ();
+  };
+}
+
+/* ---------- practice ---------- */
+let pr=null, mt=null;
+const normPy = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/v/g,'u').replace(/[\s\d'’\-·]/g,'');
+const strictPy = s => s.normalize('NFC').toLowerCase().replace(/[\s'’\-·]/g,'');
+const normVi = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/đ/g,'d').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+
+function pBackToSetup(){ $('pPlay').style.display='none'; $('pPlay').innerHTML=''; $('pSetup').style.display='block'; mt=null; pr=null; }
+$('pStart').onclick=()=>{
+  const type=$('pType').value;
+  const pool=words.filter(w=>$('pScope').value==='all'||!known.has(w.hanzi));
+  if(!pool.length){ toast('Không có từ nào trong phạm vi này'); return; }
+  const n=Math.max(1,Math.min(parseInt($('pCount').value)||10,200));
+  $('pSetup').style.display='none'; $('pPlay').style.display='block';
+  if(type==='match'){ startMatch(pool,n); return; }
+  pr={type,qs:shuffle(pool).slice(0,n),i:0,score:0,wrong:[],answered:false};
+  pShow();
+};
+
+/* --- matching game --- */
+function startMatch(pool,n){
+  const k=Math.min(Math.max(n,2),8,pool.length);
+  if(k<2){ toast('Cần ít nhất 2 từ'); pBackToSetup(); return; }
+  const items=shuffle(pool).slice(0,k);
+  mt={sel:null,done:0,k,mis:0,start:Date.now()};
+  $('pPlay').innerHTML=`<div class="muted" id="mInfo" style="text-align:center;margin-bottom:8px"></div>
+    <div class="mgrid"><div class="mcol" id="mL"></div><div class="mcol" id="mR"></div></div>
+    <div class="row center"><button class="btn" id="mQuit">← Thoát</button></div>`;
+  const mk=(parent,list,isH)=>list.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='mitem'+(isH?' h':''); b.textContent=o.t;
+    b.onclick=()=>matchClick(b,o.i,isH);
+    $(parent).appendChild(b);
+  });
+  mk('mL',shuffle(items.map((w,i)=>({i,t:w.hanzi}))),true);
+  mk('mR',shuffle(items.map((w,i)=>({i,t:w.meaning}))),false);
+  items.forEach((w,i)=>mt['w'+i]=w);
+  $('mQuit').onclick=pBackToSetup;
+  matchInfo();
+}
+function matchInfo(){ $('mInfo').textContent=`Đã ghép ${mt.done}/${mt.k} · Sai: ${mt.mis}`; }
+function matchClick(btn,i,isH){
+  if(btn.classList.contains('done')) return;
+  if(isH) speak(mt['w'+i].hanzi);
+  if(mt.sel && mt.sel.btn===btn){ btn.classList.remove('sel'); mt.sel=null; return; }
+  if(!mt.sel || mt.sel.isH===isH){
+    if(mt.sel) mt.sel.btn.classList.remove('sel');
+    btn.classList.add('sel'); mt.sel={btn,i,isH}; return;
+  }
+  const a=mt.sel; mt.sel=null; a.btn.classList.remove('sel');
+  if(a.i===i){
+    [a.btn,btn].forEach(b=>{ b.classList.add('done'); });
+    mt.done++; matchInfo();
+    if(mt.done===mt.k) matchEnd();
+  } else {
+    mt.mis++; matchInfo();
+    [a.btn,btn].forEach(b=>b.classList.add('wrong'));
+    setTimeout(()=>[a.btn,btn].forEach(b=>b.classList.remove('wrong')),500);
+  }
+}
+function matchEnd(){
+  const sec=Math.round((Date.now()-mt.start)/1000);
+  const mis=mt.mis;
+  $('pPlay').innerHTML=`<div class="result"><div>Hoàn thành ghép cặp! 🎉</div><div class="score">${sec}s</div>
+    <div>Số lần ghép sai: ${mis}</div>
+    <div class="row center" style="margin-top:14px"><button class="btn pri" id="pAgain">Chơi lại</button><button class="btn" id="pBack">Đổi bài tập</button></div></div>`;
+  $('pAgain').onclick=()=>$('pStart').click();
+  $('pBack').onclick=pBackToSetup;
+  $('pSetup').style.display='none';
+}
+
+/* --- typing exercises --- */
+function pExpected(q){ return pr.type==='meaning'?q.meaning : pr.type==='hanzi'?q.hanzi : q.pinyin; }
+function pShow(){
+  const q=pr.qs[pr.i], t=pr.type; pr.answered=false;
+  let prompt='',label='';
+  if(t==='pinyin'){ prompt=`<div class="qprompt">${esc(q.hanzi)}</div><div class="muted">${esc(q.meaning)}</div>`; label='Gõ pinyin (có dấu hoặc không dấu, ví dụ: ni hao)'; }
+  else if(t==='meaning'){ prompt=`<div class="qprompt">${esc(q.hanzi)}</div><div class="pinyin">${esc(q.pinyin)}</div>`; label='Gõ nghĩa tiếng Việt (không cần gõ dấu)'; }
+  else if(t==='dict'){ prompt='<div class="qprompt small">🎧 Nghe và gõ pinyin</div>'; label='Gõ pinyin bạn nghe được (có dấu hoặc không dấu)'; }
+  else { prompt=`<div class="qprompt small">${esc(q.meaning)}</div><div class="pinyin">${esc(q.pinyin)}</div>`; label='Gõ chữ Hán (dùng bộ gõ tiếng Trung)'; }
+  $('pPlay').innerHTML=`<div class="progress"><div style="width:${pr.i/pr.qs.length*100}%"></div></div>
+    <div class="muted" style="text-align:center">Câu ${pr.i+1} / ${pr.qs.length} · Điểm: ${pr.score}</div>
+    <div class="qbox">${prompt}
+      <div class="row center"><button class="btn" id="pListen">🔊 Nghe</button><button class="btn" id="pHint">💡 Gợi ý</button></div>
+      <div class="muted">${label}</div>
+      <input type="text" id="pInput" class="pinput" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="fb" id="pFb"></div>
+      <div class="row center">
+        <button class="btn pri" id="pCheck">Kiểm tra</button>
+        <button class="btn" id="pSkip">Bỏ qua</button>
+        <button class="btn pri" id="pNext" style="display:none">Câu tiếp ▶</button>
+        <button class="btn" id="pQuit">← Thoát</button>
+      </div></div>`;
+  $('pListen').onclick=()=>speak(q.hanzi);
+  $('pHint').onclick=()=>{
+    if(pr.answered) return;
+    const e=pExpected(q), n=Math.max(1,Math.ceil([...e].length/3));
+    $('pFb').innerHTML='Gợi ý: <b>'+esc([...e].slice(0,n).join(''))+'…</b>';
+  };
+  $('pCheck').onclick=()=>pCheck(false);
+  $('pSkip').onclick=()=>pCheck(true);
+  $('pNext').onclick=pNext;
+  $('pQuit').onclick=pBackToSetup;
+  $('pInput').addEventListener('keydown',e=>{
+    if(e.key==='Enter' && !e.isComposing){ pr.answered ? pNext() : pCheck(false); }
+  });
+  $('pInput').focus();
+  if(t==='dict') setTimeout(()=>speak(q.hanzi),250);
+}
+function pCheck(skip){
+  if(pr.answered) return;
+  const q=pr.qs[pr.i], v=$('pInput').value.trim();
+  if(!v && !skip){ toast('Hãy nhập đáp án'); return; }
+  let ok=false, note='';
+  if(!skip){
+    if(pr.type==='hanzi') ok = v.replace(/\s/g,'')===q.hanzi.replace(/\s/g,'');
+    else if(pr.type==='meaning'){
+      const u=normVi(v);
+      const vars=[q.meaning,...q.meaning.split(/[\/,;]|\bhoặc\b/i)].map(normVi).filter(Boolean);
+      ok = !!u && vars.includes(u);
+    } else {
+      ok = normPy(v)===normPy(q.pinyin);
+      if(ok && strictPy(v)!==strictPy(q.pinyin) && /[^\x00-\x7f0-9\s]|[a-z]/i.test(v) && /[\u0300-\u036f\u00c0-\u1ef9]/.test(v.normalize('NFC')))
+        note=` <span class="muted">(đúng âm tiết, kiểm tra lại dấu thanh: ${esc(q.pinyin)})</span>`;
+    }
+  }
+  pr.answered=true;
+  if(ok) pr.score++; else pr.wrong.push(q);
+  $('pFb').innerHTML = ok
+    ? `<span style="color:var(--ok)">✓ Đúng!</span> ${esc(q.hanzi)} · ${esc(q.pinyin)} · ${esc(q.meaning)}${note}`
+    : `<span style="color:var(--bad)">✗ Đáp án:</span> ${esc(q.hanzi)} · ${esc(q.pinyin)} · ${esc(q.meaning)}`;
+  $('pInput').disabled=true;
+  $('pCheck').style.display='none'; $('pSkip').style.display='none'; $('pHint').style.display='none';
+  $('pNext').style.display=''; $('pNext').textContent = pr.i+1>=pr.qs.length ? 'Xem kết quả ▶' : 'Câu tiếp ▶';
+  $('pNext').focus();
+  speak(q.hanzi);
+}
+function pNext(){ pr.i++; if(pr.i>=pr.qs.length) pEnd(); else pShow(); }
+function pEnd(){
+  const uniq=[...new Map(pr.wrong.map(w=>[w.hanzi,w])).values()];
+  const pct=Math.round(pr.score/pr.qs.length*100);
+  $('pPlay').innerHTML=`<div class="result"><div>Kết quả luyện tập</div><div class="score">${pr.score}/${pr.qs.length}</div>
+    <div>${pct}% — ${pct>=80?'Tuyệt vời! 🎉':pct>=50?'Khá tốt, cố lên! 💪':'Cần ôn thêm nhé 📖'}</div>
+    ${uniq.length?`<div class="wrongs"><b>Các từ làm sai:</b><br>${uniq.map(w=>`${esc(w.hanzi)} (${esc(w.pinyin)}) — ${esc(w.meaning)}`).join('<br>')}</div>`:''}
+    <div class="row center" style="margin-top:14px"><button class="btn pri" id="pAgain">Làm lại</button>
+    ${uniq.length?'<button class="btn" id="pRetry">Luyện các từ sai</button>':''}
+    <button class="btn" id="pBack">Đổi bài tập</button></div></div>`;
+  $('pAgain').onclick=()=>$('pStart').click();
+  $('pBack').onclick=pBackToSetup;
+  if(uniq.length) $('pRetry').onclick=()=>{ pr={type:pr.type,qs:shuffle(uniq),i:0,score:0,wrong:[],answered:false}; pShow(); };
+}
+
+/* ---------- HanziWriter ---------- */
+let writer=null, curWord='', curChar='', outlineOn=true, writerInited=false;
+function initWriterTab(){
+  if(!writerInited){
+    writerInited=true;
+    if(!window.HanziWriter){
+      $('wStatus').textContent='⚠️ Không tải được thư viện HanziWriter (cần Internet). Hãy kiểm tra kết nối rồi tải lại trang.';
+    }
+    if(words.length) setWriterWord(words[0].hanzi);
+  }
+  fillWriterSelect();
+}
+function fillWriterSelect(){
+  const sel=$('wSelect'); const keep=curWord;
+  sel.innerHTML = words.map((w,i)=>`<option value="${i}">${esc(w.hanzi)} — ${esc(w.pinyin)} — ${esc(w.meaning)}</option>`).join('');
+  const i=words.findIndex(w=>w.hanzi===keep); if(i>=0) sel.value=i;
+}
+function setWriterWord(text){
+  const chars=[...text].filter(c=>/[\u3400-\u9fff\uf900-\ufaff]/.test(c));
+  if(!chars.length){ toast('Không có chữ Hán hợp lệ'); return; }
+  curWord=text;
+  const box=$('wChars'); box.innerHTML='';
+  chars.forEach((c,i)=>{
+    const b=document.createElement('button'); b.className='btn'; b.textContent=c;
+    b.onclick=()=>selectChar(c,b);
+    box.appendChild(b);
+    if(i===0) selectChar(c,b);
+  });
+  const w=words.find(x=>x.hanzi===text);
+  $('wInfo').textContent = w ? `${w.pinyin} — ${w.meaning}` : '';
+  fillWriterSelect();
+}
+function selectChar(c,btn){
+  document.querySelectorAll('#wChars button').forEach(b=>b.classList.toggle('active',b===btn));
+  curChar=c; buildWriter();
+}
+function buildWriter(){
+  const t=$('writerTarget'); t.innerHTML=''; $('wStatus').textContent='';
+  if(!window.HanziWriter){ $('wStatus').textContent='⚠️ Chưa tải được thư viện HanziWriter (cần Internet).'; return; }
+  try{
+    writer = HanziWriter.create('writerTarget', curChar, {
+      width:280, height:280, padding:16,
+      showOutline: outlineOn,
+      strokeAnimationSpeed: parseFloat($('wSpeed').value),
+      delayBetweenStrokes: 250,
+      strokeColor:'#222', outlineColor:'#d8d2c4', radicalColor:'#c0392b', highlightColor:'#e74c3c',
+      onLoadCharDataError:()=>{ $('wStatus').textContent='Không tải được dữ liệu nét chữ cho "'+curChar+'" (cần Internet hoặc chữ chưa có dữ liệu).'; }
+    });
+    writer.animateCharacter();
+  }catch(e){ $('wStatus').textContent='Lỗi hiển thị nét chữ: '+e.message; }
+}
+$('wAnim').onclick=()=>{ if(writer){ writer.cancelQuiz&&writer.cancelQuiz(); writer.animateCharacter(); $('wStatus').textContent=''; } };
+$('wReset').onclick=buildWriter;
+$('wQuiz').onclick=()=>{
+  if(!writer) return;
+  $('wStatus').textContent='Hãy viết từng nét lên khung (dùng chuột hoặc ngón tay)...';
+  writer.quiz({
+    onMistake:d=>{ $('wStatus').textContent='Sai nét — lần sai: '+d.totalMistakes; },
+    onCorrectStroke:d=>{ $('wStatus').textContent='Đúng! Còn '+d.strokesRemaining+' nét.'; },
+    onComplete:d=>{ $('wStatus').textContent='🎉 Hoàn thành! Số lần sai: '+d.totalMistakes; }
+  });
+};
+$('wOutline').onclick=()=>{ outlineOn=!outlineOn; if(writer){ outlineOn?writer.showOutline():writer.hideOutline(); } };
+$('wSpeak').onclick=()=>speak(curWord||curChar);
+$('wSpeed').oninput=()=>{ if(writer) writer.updateOptions&&writer.updateOptions({strokeAnimationSpeed:parseFloat($('wSpeed').value)}); };
+$('wSelect').onchange=()=>{ const w=words[$('wSelect').value]; if(w) setWriterWord(w.hanzi); };
+$('wGo').onclick=()=>{ const v=$('wInput').value.trim(); if(v) setWriterWord(v); };
+$('wInput').addEventListener('keydown',e=>{ if(e.key==='Enter') $('wGo').click(); });
+
+/* ---------- data import ---------- */
+function parseText(text){
+  text=text.replace(/^\uFEFF/,'').trim();
+  if(!text) return [];
+  if(text[0]==='['||text[0]==='{'){
+    try{
+      let j=JSON.parse(text); if(!Array.isArray(j)) j=j.words||j.data||j.vocab||[];
+      return j.map(o=>{
+        if(Array.isArray(o)) return {hanzi:String(o[0]||'').trim(),pinyin:String(o[1]||'').trim(),meaning:String(o[2]||'').trim()};
+        return {
+          hanzi:String(o.hanzi||o.han||o.chinese||o.word||o.zh||'').trim(),
+          pinyin:String(o.pinyin||o.pronunciation||'').trim(),
+          meaning:String(o.meaning||o.nghia||o.vi||o.vietnamese||o.translation||'').trim()
+        };
+      }).filter(w=>w.hanzi);
+    }catch(e){ /* fall through to text parsing */ }
+  }
+  const out=[];
+  text.split(/\r?\n/).forEach((line,i)=>{
+    line=line.trim(); if(!line) return;
+    const sep = line.includes('\t')?'\t': line.includes('|')?'|': line.includes(';')?';': ',';
+    const parts = splitLine(line,sep);
+    if(parts.length<2) return;
+    const [h,p,...m]=parts;
+    if(i===0 && /^(hanzi|han|chinese|chữ|chu|từ|tu|word)/i.test(h)) return;
+    if(h) out.push({hanzi:h.trim(),pinyin:(p||'').trim(),meaning:m.join(sep===','?', ':sep).trim()});
+  });
+  return out;
+}
+function splitLine(line,sep){
+  if(sep!==',') return line.split(sep).map(s=>s.trim());
+  const res=[]; let cur='',q=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){ if(q&&line[i+1]==='"'){cur+='"';i++;} else q=!q; }
+    else if(c===','&&!q){ res.push(cur.trim()); cur=''; }
+    else cur+=c;
+  }
+  res.push(cur.trim()); return res;
+}
+function applyImport(list){
+  if(!list.length){ toast('Không đọc được từ nào. Kiểm tra định dạng file.'); return; }
+  if($('appendMode').checked){
+    const have=new Set(words.map(w=>w.hanzi));
+    list.forEach(w=>{ if(!have.has(w.hanzi)){ words.push(w); have.add(w.hanzi); } });
+  } else {
+    words=[...new Map(list.map(w=>[w.hanzi,w])).values()];
+    known=new Set([...known].filter(h=>words.some(w=>w.hanzi===h)));
+  }
+  save(); buildDeck(true); renderList(); fillWriterSelect();
+  toast('Đã nạp '+list.length+' từ');
+}
+$('fileIn').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ applyImport(parseText(String(r.result))); e.target.value=''; };
+  r.readAsText(f,'UTF-8');
+});
+$('pasteBtn').onclick=()=>{ applyImport(parseText($('pasteArea').value)); };
+$('exportBtn').onclick=()=>{
+  const csv=words.map(w=>[w.hanzi,w.pinyin,w.meaning].map(s=>/[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download='tu-vung.csv'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+$('resetKnown').onclick=()=>{ if(confirm('Xóa toàn bộ tiến độ "đã thuộc"?')){ known.clear(); save(); buildDeck(true); renderList(); } };
+$('resetAll').onclick=()=>{ if(confirm('Khôi phục về dữ liệu mẫu? Danh sách hiện tại sẽ bị thay thế.')){ words=SAMPLE.slice(); known.clear(); save(); buildDeck(true); renderList(); fillWriterSelect(); } };
+
+/* ---------- list ---------- */
+function renderList(){
+  const q=$('search').value.trim().toLowerCase();
+  const rows=words.map((w,i)=>({w,i})).filter(({w})=>!q||(w.hanzi+w.pinyin+w.meaning).toLowerCase().includes(q));
+  $('listCount').textContent=words.length;
+  $('listBody').innerHTML=rows.map(({w,i})=>`<tr>
+    <td class="h">${esc(w.hanzi)}</td><td>${esc(w.pinyin)}</td><td>${esc(w.meaning)}</td>
+    <td style="white-space:nowrap"><button class="btn tiny" data-a="s" data-i="${i}">🔊</button>
+    <button class="btn tiny" data-a="w" data-i="${i}">✍️</button>
+    <button class="btn tiny" data-a="k" data-i="${i}">${known.has(w.hanzi)?'✓':'○'}</button>
+    <button class="btn tiny" data-a="d" data-i="${i}">🗑</button></td></tr>`).join('');
+}
+$('search').oninput=renderList;
+$('listBody').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const w=words[b.dataset.i]; if(!w) return;
+  const a=b.dataset.a;
+  if(a==='s') speak(w.hanzi);
+  else if(a==='w'){ showTab('write'); setWriterWord(w.hanzi); }
+  else if(a==='k'){ known.has(w.hanzi)?known.delete(w.hanzi):known.add(w.hanzi); save(); renderList(); }
+  else if(a==='d'){ words.splice(b.dataset.i,1); known.delete(w.hanzi); save(); renderList(); buildDeck(true); fillWriterSelect(); }
+});
+
+/* ---------- init ---------- */
+load(); buildDeck(true); renderList();
+})();
+</script>
+</body>
+</html>
