@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài kiểm tra số 1 - Tiếng Trung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap&subset=vietnamese" rel="stylesheet">
+<style>
+:root{--bg:#f5f6fa;--card:#fff;--ink:#1f2430;--muted:#6b7280;--brand:#c0392b;--brand2:#e8b04a;--line:#e3e6ee;--ok:#16794c;--bad:#b42318}
+*{box-sizing:border-box}
+/* Font: chữ Latin/tiếng Việt dùng font hỗ trợ dấu đầy đủ trước; chữ Hán tự rơi xuống font Trung phía sau */
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,"Noto Sans","Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB","Heiti SC",sans-serif;line-height:1.6;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+input,select,button,textarea{font-family:inherit}
+code{font-family:Consolas,Menlo,monospace}
+.wrap{max-width:860px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+h1{margin:0 0 4px;font-size:24px}
+h2{margin:0 0 4px;font-size:18px;color:var(--brand)}
+.sub{color:var(--muted);font-size:14px;margin:0 0 12px}
+.zh{font-size:20px;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB","Heiti SC","Be Vietnam Pro","Segoe UI",Arial,sans-serif}
+input[lang=zh]{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB","Heiti SC","Be Vietnam Pro","Segoe UI",Arial,sans-serif}
+label.f{display:block;font-weight:600;margin:12px 0 4px}
+input[type=text],select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:16px;font-family:inherit;background:#fff}
+input[type=text]:focus,select:focus{outline:2px solid var(--brand2);border-color:var(--brand2)}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:11px 20px;font-weight:600}
+.btn{background:var(--brand);color:#fff}.btn:hover{filter:brightness(1.08)}
+.btn2{background:#eef0f5;color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+ul.rules{padding-left:20px;margin:8px 0}ul.rules li{margin:4px 0}
+.q{padding:12px 0;border-top:1px dashed var(--line)}
+.q:first-of-type{border-top:0}
+.qt{font-size:17px;margin-bottom:6px}
+.qn{display:inline-block;min-width:26px;font-weight:700;color:var(--brand)}
+.vi{color:var(--muted);font-size:14px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:#fff;font-size:17px}
+.opt:has(input:checked){border-color:var(--brand);background:#fdf0ee}
+.opt input{accent-color:var(--brand)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.row2{grid-template-columns:1fr}}
+.bank{background:#fff8e6;border:1px solid #f1d98f;border-radius:8px;padding:8px 12px;font-size:18px;margin-bottom:8px}
+#bar{position:sticky;top:0;z-index:20;background:#1f2430;color:#fff}
+#bar .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+#timer{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+#timer.low{color:#ff8a80;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.5}}
+.badge{padding:4px 10px;border-radius:99px;background:#3a4152;font-size:14px}
+.badge.w{background:var(--bad)}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:rgba(15,18,28,.8);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .box{background:#fff;border-radius:16px;max-width:460px;width:100%;padding:24px;text-align:center}
+.modal h3{margin:0 0 8px;color:var(--bad);font-size:22px}
+.noselect,.noselect *{-webkit-user-select:none;user-select:none}
+input,select{-webkit-user-select:text;user-select:text}
+.res td,.res th{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left}
+.res{width:100%;border-collapse:collapse}
+.big{font-size:44px;font-weight:800;color:var(--brand)}
+audio{width:100%;margin:6px 0}
+.note{font-size:13px;color:var(--muted)}
+.prog{position:fixed;bottom:12px;right:12px;z-index:15;background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:13px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+</style>
+</head>
+<body>
+
+<!-- THANH TRẠNG THÁI -->
+<div id="bar" class="hidden"><div class="in">
+  <div><strong>Bài kiểm tra số 1</strong> · <span id="barName"></span></div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <span class="badge" id="violBadge">Vi phạm: 0/4</span>
+    <span id="timer">90:00</span>
+  </div>
+</div></div>
+
+<div class="wrap">
+
+<!-- MÀN HÌNH BẮT ĐẦU -->
+<section id="start" class="card">
+  <h1>BÀI KIỂM TRA SỐ 1 <span class="zh">汉语</span></h1>
+  <p class="sub">Thời lượng: <strong>90 phút</strong> · Hình thức: làm bài trực tuyến</p>
+  <label class="f" for="fName">Họ và tên học viên *</label>
+  <input type="text" id="fName" autocomplete="off" placeholder="Nhập họ và tên">
+  <label class="f" for="fClass">Lớp / Mã học viên</label>
+  <input type="text" id="fClass" autocomplete="off" placeholder="Không bắt buộc">
+  <h2 style="margin-top:18px">Quy định phòng thi</h2>
+  <ul class="rules">
+    <li>Thời gian làm bài <strong>90 phút</strong>, đếm ngược từ lúc bấm “Bắt đầu”. Hết giờ hệ thống tự nộp bài.</li>
+    <li>Bài thi chạy ở chế độ <strong>toàn màn hình</strong>. Không chuyển tab, không mở cửa sổ/ứng dụng khác, không thoát toàn màn hình.</li>
+    <li>Mỗi lần rời màn hình thi tính là <strong>1 lần vi phạm</strong>. Vi phạm <strong>lần thứ 4 → bài thi bị nộp ngay lập tức</strong>.</li>
+    <li>Tải lại trang (F5) cũng bị tính 1 lần vi phạm; đồng hồ không dừng lại.</li>
+    <li>Không sao chép, dán, chuột phải trong khi làm bài.</li>
+    <li>Sau khi nộp, học viên có thể bấm “Làm lại bài” để thi lại nhiều lần; mỗi lần làm lại có 90 phút mới và số lần vi phạm tính lại từ đầu.</li>
+    <li>Bài 3 (nghe): đặt file <code>bai3.mp3</code> cùng thư mục với file đề này.</li>
+  </ul>
+  <button class="btn" id="btnStart">Bắt đầu làm bài</button>
+  <p class="note" id="startMsg"></p>
+</section>
+
+<!-- BÀI THI -->
+<main id="exam" class="hidden noselect"></main>
+
+<!-- KẾT QUẢ -->
+<section id="result" class="card hidden"></section>
+
+</div>
+
+<div class="prog hidden" id="prog"></div>
+
+<!-- MODAL CẢNH BÁO -->
+<div class="modal hidden" id="mWarn"><div class="box">
+  <h3 id="mwTitle">⚠ Cảnh báo vi phạm</h3>
+  <p id="mwText"></p>
+  <button class="btn" id="mwBtn">Tôi hiểu, tiếp tục làm bài</button>
+</div></div>
+
+<!-- MODAL XÁC NHẬN NỘP -->
+<div class="modal hidden" id="mConfirm"><div class="box">
+  <h3 style="color:var(--ink)">Nộp bài?</h3>
+  <p id="mcText"></p>
+  <div style="display:flex;gap:10px;justify-content:center">
+    <button class="btn2" id="mcNo">Quay lại</button>
+    <button class="btn" id="mcYes">Nộp bài</button>
+  </div>
+</div></div>
+
+<script>
+"use strict";
+/* ================= CẤU HÌNH (giáo viên có thể chỉnh) ================= */
+const CFG = {
+  EXAM_ID: "tq-bai-kiem-tra-1-v1",
+  DURATION_SEC: 90 * 60,
+  MAX_VIOLATIONS: 4,
+  AUDIO_SRC: "bai3.mp3",
+  // Đáp án Bài 3 (nghe). Điền 'A','B' hoặc 'C' sau khi biết nội dung file nghe.
+  // Để null thì câu đó KHÔNG tự chấm, chờ giáo viên.
+  LISTEN_KEY: [null, null, null, null, null, null],
+  SHOW_SCORE_TO_STUDENT: true
+};
+
+/* ================= NỘI DUNG ĐỀ + ĐÁP ÁN ================= */
+const B1 = [ // [tiếng Việt, pinyin, hán tự]
+  ["Xin chào!","nǐ hǎo","你好"],
+  ["Không lớn lắm!","bú tài dà","不太大"],
+  ["Rất tốt","hěn hǎo","很好"],
+  ["Người con gái trắng","bái nǚ","白女"],
+  ["Ngựa lớn","dà mǎ","大马"],
+  ["Tiếng Trung","hànyǔ","汉语"],
+  ["Về nhà gặp Mẹ","huí jiā jiàn māma","回家见妈妈"],
+  ["Em trai","dìdi","弟弟"],
+  ["Chủ nhật","xīngqīrì","星期日"]
+];
+const B2 = ["今天你去哪儿 ?","昨天星期几?","你爸爸妈妈好吗?","这是你姐姐?","你学汉语吗? 汉语难吗?"];
+const B3 = [
+  ["他今天去哪儿？","tā jīntiān qù nǎr",["学校 xuéxiào","北京 běijīng","天安门 tiān'ānmén"]],
+  ["明天星期几？","Míngtiān xīngqī jǐ",["星期三 xīngqīsān","星期二 xīngqī'èr","星期四 xīngqīsì"]],
+  ["他昨天忙吗？","Tā zuótiān máng ma",["不太忙 bú tài máng","不忙 bù máng","很忙 hěn máng"]],
+  ["他家有几口人？","Tā jiā yǒu jǐ kǒu rén",["三口人 (Ba người)","四口人 (Bốn người)","五口人 (Năm người)"]],
+  ["汉语难吗？","Hànyǔ nán ma",["很难 hěn nán","不难 bù nán","不太难 bú tài nán"]],
+  ["他妈妈去哪儿？","Tā māmā qù nǎr",["去银行 qù yínháng","去学校 qù xuéxiào","回家 huí jiā"]]
+];
+const B4 = [ // [câu (___ là chỗ trống), [A,B,C], đáp án]
+  ["你____吗？",["百","忙","十"],1],
+  ["我今天____学校。",["大","回","坐"],1],
+  ["他是我____。",["茶","信","哥哥"],2],
+  ["明天星期____。",["忙","大","三"],2],
+  ["我____汉语。",["学","喝","寄"],0],
+  ["她____老师吗？",["是","不","很"],0],
+  ["我去银行____钱。",["寄","取","喝"],1],
+  ["今天我很____。",["白","忙","女"],1]
+];
+const B5 = [ // [tiếng Việt, [các đáp án chấp nhận]]
+  ["Chào bạn, Bạn khỏe không?",["你好你好吗","你好你身体好吗","你好你怎么样"]],
+  ["~ Mình khỏe, mình đi ngân hàng rút tiền, bạn đi không?",["我好我去银行取钱","我很好我去银行取钱","我好我去银行取钱你去吗","我很好我去银行取钱你去吗"]],
+  ["~ Không, mình về trường học tiếng Trung, mai mình đi ngân hàng.",["不我回学校学汉语明天我去银行"]],
+  ["~ Bố Mẹ bạn khoẻ chứ?",["你爸爸妈妈好吗"]],
+  ["~ Không khoẻ lắm, Bố mình bận lắm!",["不太好我爸爸很忙"]],
+  ["~ Tạm biệt!",["再见"]],
+  ["~ Mai gặp lại nhé!",["明天见"]]
+];
+const B6WORDS = ["是","请","喝","哪儿","谁"];
+const B6 = [
+  ["你","吗？","喝"],
+  ["他","我老师。","是"],
+  ["你住在","？","哪儿"],
+  ["","是王老师？","谁"],
+  ["","进！","请"]
+];
+const B7TEXT = "小王是中国人，他不是老师，他是学生。他学习英语，也学习汉语。他的朋友小李是美国人，在北京工作。";
+const B7 = [ // [câu hỏi, hàm kiểm tra]
+  ["小王是哪国人？", s=>s.includes("中国")],
+  ["他是老师吗？", s=>s.includes("不是")],
+  ["他学习什么？", s=>s.includes("英语")&&s.includes("汉语")],
+  ["小李是哪国人？", s=>s.includes("美国")],
+  ["小李在哪儿工作？", s=>s.includes("北京")]
+];
+const B8TEXT = "我叫王明。我是学生。我学汉语和英语。今天星期一，我去学校。明天我去银行取钱。";
+const B8A = [["他是老师。","错"],["他学英语。","对"],["今天星期二。","错"],["明天他去银行。","对"]];
+const B8B = [
+  ["我 / 是 / 中国人 / 不",["我不是中国人"]],
+  ["不 / 他 / 学习 / 汉语",["他不学习汉语"]],
+  ["您 / 身体 / 吗 / 好",["您身体好吗"]],
+  ["你 / 在 / 哪儿 / 工作",["你在哪儿工作"]],
+  ["这 / 我 / 是 / 朋友",["这是我朋友"]]
+];
+
+const B10TEXT = "中午，玛丽去食堂吃饭。食堂里人很多。玛丽要一个馒头、一碗米饭和一个鸡蛋。她还要一碗汤。玛丽不要啤酒，她要一些饺子。那些饺子很好吃。玛丽很喜欢食堂的饭。食堂里还有一些包子，那些包子也很好吃。";
+const B10 = [ // [câu hỏi, [A,B,C,D], đáp án (0-3)]
+  ["中午玛丽去哪儿吃饭？",["家","饭馆","食堂","学校"],2],
+  ["食堂里怎么样？",["人很多","没有人","人很少","只有玛丽"],0],
+  ["玛丽要什么？",["一些包子","面条儿","一个馒头","啤酒"],2],
+  ["玛丽要几碗米饭？",["一碗","两碗","三碗","不要米饭"],0],
+  ["玛丽要不要啤酒？",["要","要一些","不要","不知道"],2],
+  ["玛丽还要什么？",["一些饺子","一些包子","面条儿","馒头"],0]
+];
+const TOTAL = 60; // tổng điểm tối đa của đề (9+5+6+8+7+5+5+4+5+6)
+
+/* ================= TIỆN ÍCH ================= */
+const $ = id => document.getElementById(id);
+const LS = {
+  get(){ try{ return JSON.parse(localStorage.getItem(CFG.EXAM_ID)||"null"); }catch(e){ return null; } },
+  set(v){ try{ localStorage.setItem(CFG.EXAM_ID, JSON.stringify(v)); }catch(e){} }
+};
+const hz = s => (s||"").replace(/[^\u4e00-\u9fff]/g,"");
+const py = s => (s||"").toLowerCase().replace(/ü/g,"u").replace(/v/g,"u")
+  .normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z]/g,"");
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const LET = ["A","B","C","D"];
+
+let S = null;          // trạng thái bài thi
+let tick = null, started = false, submitted = false, fsOK = false, away = false, lastViol = 0;
+
+/* ================= DỰNG ĐỀ ================= */
+function buildExam(){
+  let h = "";
+  // Bài 1
+  h += `<section class="card"><h2>Bài 1: Viết phiên âm và chữ Hán của các từ dưới đây</h2>
+  <p class="sub">Phiên âm có thể gõ có dấu hoặc không dấu (vd: nǐ hǎo / ni hao).</p>`;
+  B1.forEach((r,i)=>{
+    h += `<div class="q"><div class="qt"><span class="qn">${i+1}.</span>${esc(r[0])}</div>
+    <div class="row2"><input type="text" data-id="b1p${i}" placeholder="Phiên âm (pinyin)" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <input type="text" data-id="b1h${i}" placeholder="Chữ Hán" autocomplete="off" lang="zh" spellcheck="false"></div></div>`;
+  });
+  h += `</section>`;
+  // Bài 2
+  h += `<section class="card"><h2>Bài 2: Trả lời các câu hỏi dưới đây bằng tiếng Trung</h2>
+  <p class="sub">Phần này do giáo viên chấm.</p>`;
+  B2.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt zh"><span class="qn">${i+1}.</span>${esc(q)}</div>
+    <input type="text" data-id="b2_${i}" placeholder="Câu trả lời bằng tiếng Trung" autocomplete="off" lang="zh"></div>`;
+  });
+  h += `</section>`;
+  // Bài 3
+  h += `<section class="card"><h2>Bài 3: Nghe và chọn đáp án đúng</h2>
+  <audio controls preload="auto" id="aud" src="${esc(CFG.AUDIO_SRC)}"></audio>
+  <p class="note" id="audMsg"></p>`;
+  B3.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt"><span class="qn">${i+1}.</span><span class="zh">${esc(q[0])}</span> <span class="vi">/${esc(q[1])}/</span></div><div class="opts">`;
+    q[2].forEach((o,k)=>{
+      h += `<label class="opt"><input type="radio" name="b3_${i}" data-id="b3_${i}" value="${k}">${LET[k]}. ${esc(o)}</label>`;
+    });
+    h += `</div></div>`;
+  });
+  h += `</section>`;
+  // Bài 4
+  h += `<section class="card"><h2>Bài 4: Chọn đáp án đúng</h2>`;
+  B4.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt zh"><span class="qn">${i+1}.</span>${esc(q[0])}</div><div class="opts">`;
+    q[1].forEach((o,k)=>{
+      h += `<label class="opt"><input type="radio" name="b4_${i}" data-id="b4_${i}" value="${k}">${LET[k]}. ${esc(o)}</label>`;
+    });
+    h += `</div></div>`;
+  });
+  h += `</section>`;
+  // Bài 5
+  h += `<section class="card"><h2>Bài 5: Dịch các câu sau sang tiếng Trung</h2>`;
+  B5.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt"><span class="qn">${i+1}.</span>${esc(q[0])}</div>
+    <input type="text" data-id="b5_${i}" placeholder="Viết bằng chữ Hán" autocomplete="off" lang="zh"></div>`;
+  });
+  h += `</section>`;
+  // Bài 6
+  h += `<section class="card"><h2>Bài 6: Điền từ thích hợp</h2>
+  <div class="bank zh">${B6WORDS.join("、")}</div>`;
+  B6.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt zh" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="qn">${i+1}.</span>${esc(q[0])}
+    <select data-id="b6_${i}" style="width:110px;font-size:18px"><option value="">—</option>${B6WORDS.map(w=>`<option>${w}</option>`).join("")}</select>${esc(q[1])}</div></div>`;
+  });
+  h += `</section>`;
+  // Bài 7
+  h += `<section class="card"><h2>Bài 7: Đọc đoạn văn và trả lời câu hỏi</h2>
+  <p class="sub">Trả lời tiếng Trung ngắn gọn.</p>
+  <div class="bank zh" style="background:#f3f6ff;border-color:#c9d5f5">${esc(B7TEXT)}</div>`;
+  B7.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt zh"><span class="qn">${i+1}.</span>${esc(q[0])}</div>
+    <input type="text" data-id="b7_${i}" placeholder="Trả lời bằng tiếng Trung" autocomplete="off" lang="zh"></div>`;
+  });
+  h += `</section>`;
+  // Bài 8A
+  h += `<section class="card"><h2>Bài 8: Đọc đoạn văn và phán đoán đúng sai</h2>
+  <div class="bank zh" style="background:#f3f6ff;border-color:#c9d5f5">${esc(B8TEXT)}</div>`;
+  B8A.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt zh"><span class="qn">${i+1}.</span>${esc(q[0])}</div><div class="opts">
+    <label class="opt"><input type="radio" name="b8a_${i}" data-id="b8a_${i}" value="对">对</label>
+    <label class="opt"><input type="radio" name="b8a_${i}" data-id="b8a_${i}" value="错">错</label></div></div>`;
+  });
+  h += `</section>`;
+  // Bài 8B
+  h += `<section class="card"><h2>Bài 9: Viết câu hoàn chỉnh với gợi ý sau</h2>
+  <p class="sub">(Đề gốc đánh số là “Bài 8” lần thứ hai.)</p>`;
+  B8B.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt zh"><span class="qn">${i+1}.</span>${esc(q[0])}</div>
+    <input type="text" data-id="b8b_${i}" placeholder="Viết câu hoàn chỉnh" autocomplete="off" lang="zh"></div>`;
+  });
+  h += `</section>`;
+  // Bài 10
+  h += `<section class="card"><h2>Bài 10: Đọc đoạn văn và chọn đáp án đúng</h2>
+  <div class="bank zh" style="background:#f3f6ff;border-color:#c9d5f5">${esc(B10TEXT)}</div>`;
+  B10.forEach((q,i)=>{
+    h += `<div class="q"><div class="qt zh"><span class="qn">${i+1}.</span>${esc(q[0])}</div><div class="opts">`;
+    q[1].forEach((o,k)=>{
+      h += `<label class="opt zh"><input type="radio" name="b10_${i}" data-id="b10_${i}" value="${k}">${LET[k]}. ${esc(o)}</label>`;
+    });
+    h += `</div></div>`;
+  });
+  h += `</section>
+  <div class="card" style="text-align:center"><button class="btn" id="btnSubmit">Nộp bài</button>
+  <p class="note">Kiểm tra kỹ trước khi nộp. Nộp xong không thể sửa.</p></div>`;
+  $("exam").innerHTML = h;
+  const aud = $("aud");
+  aud.addEventListener("error",()=>{ $("audMsg").textContent = "Không tải được file nghe “"+CFG.AUDIO_SRC+"”. Hãy báo giám thị."; });
+}
+
+/* ================= LƯU / KHÔI PHỤC ĐÁP ÁN ================= */
+function collect(){
+  const a = {};
+  document.querySelectorAll("#exam [data-id]").forEach(el=>{
+    const id = el.dataset.id;
+    if(el.type==="radio"){ if(el.checked) a[id]=el.value; }
+    else a[id]=el.value;
+  });
+  return a;
+}
+function persist(){ if(!S||submitted) return; S.ans = collect(); LS.set(S); updateProg(); }
+function restore(){
+  const a = S.ans||{};
+  document.querySelectorAll("#exam [data-id]").forEach(el=>{
+    const v = a[el.dataset.id]; if(v==null) return;
+    if(el.type==="radio") el.checked = (el.value===v); else el.value = v;
+  });
+}
+function updateProg(){
+  const a = collect(); let n=0, tot=0;
+  const ids = new Set(); document.querySelectorAll("#exam [data-id]").forEach(e=>ids.add(e.dataset.id));
+  ids.forEach(id=>{ tot++; if(a[id] && String(a[id]).trim()!=="") n++; });
+  $("prog").textContent = `Đã làm: ${n}/${tot}`;
+}
+
+/* ================= ĐỒNG HỒ ================= */
+function fmt(s){ s=Math.max(0,s); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
+function runTimer(){
+  clearInterval(tick);
+  const upd = ()=>{
+    const left = Math.round((S.endAt - Date.now())/1000);
+    $("timer").textContent = fmt(left);
+    $("timer").classList.toggle("low", left<=300);
+    if(left<=0){ submit("Hết giờ làm bài"); }
+  };
+  upd(); tick = setInterval(upd, 500);
+}
+
+/* ================= GIÁM SÁT VI PHẠM ================= */
+function setBadge(){
+  const b = $("violBadge");
+  b.textContent = `Vi phạm: ${S.viol}/${CFG.MAX_VIOLATIONS}`;
+  b.classList.toggle("w", S.viol>0);
+}
+function violation(reason){
+  if(!started||submitted) return;
+  const now = Date.now();
+  if(now-lastViol < 1500) return;          // tránh đếm trùng nhiều sự kiện cùng lúc
+  lastViol = now;
+  S.viol++; S.log.push({t:new Date().toISOString(), r:reason}); S.ans = collect(); LS.set(S); setBadge();
+  if(S.viol >= CFG.MAX_VIOLATIONS){ submit("Vi phạm "+CFG.MAX_VIOLATIONS+" lần: "+reason); return; }
+  const left = CFG.MAX_VIOLATIONS - S.viol;
+  $("mwTitle").textContent = `⚠ Cảnh báo vi phạm ${S.viol}/${CFG.MAX_VIOLATIONS}`;
+  $("mwText").innerHTML = `Bạn vừa rời khỏi màn hình thi (<strong>${esc(reason)}</strong>).<br>Còn <strong>${left}</strong> lần nữa, bài thi sẽ bị <strong>nộp ngay lập tức</strong>.`;
+  $("mWarn").classList.remove("hidden");
+}
+function enterFS(){
+  const el = document.documentElement;
+  const f = el.requestFullscreen || el.webkitRequestFullscreen;
+  if(f){ try{ const p=f.call(el); if(p&&p.then) p.then(()=>{fsOK=true;}).catch(()=>{fsOK=false;}); else fsOK=true; }catch(e){} }
+}
+function leave(reason){ if(away) return; away = true; violation(reason); }
+document.addEventListener("visibilitychange",()=>{ if(document.hidden) leave("Chuyển tab / thu nhỏ cửa sổ"); else away=false; });
+window.addEventListener("blur",()=>{ leave("Chuyển sang cửa sổ/ứng dụng khác"); });
+window.addEventListener("focus",()=>{ away=false; });
+document.addEventListener("fullscreenchange",()=>{
+  if(started&&!submitted&&fsOK&&!document.fullscreenElement) violation("Thoát chế độ toàn màn hình");
+});
+document.addEventListener("webkitfullscreenchange",()=>{
+  if(started&&!submitted&&fsOK&&!document.webkitFullscreenElement) violation("Thoát chế độ toàn màn hình");
+});
+["copy","cut","paste","contextmenu","dragstart"].forEach(ev=>{
+  document.addEventListener(ev,e=>{ if(started&&!submitted) e.preventDefault(); });
+});
+document.addEventListener("keydown",e=>{
+  if(!started||submitted) return;
+  const k = e.key.toLowerCase();
+  if(e.key==="F12" || e.key==="PrintScreen" || (e.ctrlKey||e.metaKey)&&["p","s","u","c","v","x"].includes(k) || (e.ctrlKey&&e.shiftKey&&["i","j","c"].includes(k))){
+    e.preventDefault();
+  }
+});
+window.addEventListener("beforeunload",e=>{ if(started&&!submitted){ e.preventDefault(); e.returnValue=""; }});
+
+/* ================= CHẤM ================= */
+function grade(a){
+  const sec = [];
+  // Bài 1: mỗi từ 1 điểm (0.5 phiên âm + 0.5 chữ Hán)
+  let e=0; B1.forEach((r,i)=>{
+    if(py(a["b1p"+i])===py(r[1]) && py(r[1])!=="") e+=.5;
+    if(hz(a["b1h"+i])===r[2]) e+=.5;
+  });
+  sec.push({n:"Bài 1 (phiên âm + chữ Hán)",e,m:B1.length,p:0});
+  // Bài 2: GV chấm
+  sec.push({n:"Bài 2 (trả lời tiếng Trung)",e:0,m:0,p:B2.length});
+  // Bài 3
+  e=0; let m3=0,p3=0;
+  CFG.LISTEN_KEY.forEach((k,i)=>{
+    if(k==null){ p3++; return; }
+    m3++; if(a["b3_"+i]!=null && LET[+a["b3_"+i]]===k) e++;
+  });
+  sec.push({n:"Bài 3 (nghe)",e,m:m3,p:p3});
+  // Bài 4
+  e=0; B4.forEach((q,i)=>{ if(a["b4_"+i]!=null && +a["b4_"+i]===q[2]) e++; });
+  sec.push({n:"Bài 4 (chọn đáp án)",e,m:B4.length,p:0});
+  // Bài 5: khớp đáp án => điểm; không khớp => GV xem lại
+  e=0; let p5=0;
+  B5.forEach((q,i)=>{ const s=hz(a["b5_"+i]); if(q[1].includes(s)) e++; else if(s) p5++; });
+  sec.push({n:"Bài 5 (dịch sang tiếng Trung)",e,m:B5.length-p5,p:p5,note:"câu khác đáp án mẫu → GV xem lại"});
+  // Bài 6
+  e=0; B6.forEach((q,i)=>{ if(a["b6_"+i]===q[2]) e++; });
+  sec.push({n:"Bài 6 (điền từ)",e,m:B6.length,p:0});
+  // Bài 7
+  e=0; B7.forEach((q,i)=>{ if(q[1](hz(a["b7_"+i]))) e++; });
+  sec.push({n:"Bài 7 (đọc hiểu)",e,m:B7.length,p:0});
+  // Bài 8 đúng sai
+  e=0; B8A.forEach((q,i)=>{ if(a["b8a_"+i]===q[1]) e++; });
+  sec.push({n:"Bài 8 (đúng/sai)",e,m:B8A.length,p:0});
+  // Bài 9 sắp xếp câu
+  e=0; let p9=0;
+  B8B.forEach((q,i)=>{ const s=hz(a["b8b_"+i]); if(q[1].includes(s)) e++; else if(s) p9++; });
+  sec.push({n:"Bài 9 (viết câu)",e,m:B8B.length-p9,p:p9,note:"câu khác đáp án mẫu → GV xem lại"});
+  // Bài 10
+  e=0; B10.forEach((q,i)=>{ if(a["b10_"+i]!=null && +a["b10_"+i]===q[2]) e++; });
+  sec.push({n:"Bài 10 (đọc hiểu - chọn đáp án)",e,m:B10.length,p:0});
+  const E = sec.reduce((x,s)=>x+s.e,0), M = sec.reduce((x,s)=>x+s.m,0), P = sec.reduce((x,s)=>x+s.p,0);
+  return {sec,E,M,P};
+}
+
+/* ================= NỘP BÀI ================= */
+function submit(reason){
+  if(submitted) return;
+  const a = collect(); S.ans = a;
+  submitted = true; started = false; clearInterval(tick);
+  const g = grade(a);
+  S.done = {reason, at:new Date().toISOString(), used: Math.round((Date.now()-S.startAt)/1000), E:g.E, M:g.M, P:g.P, sec:g.sec};
+  LS.set(S);
+  document.querySelectorAll(".modal").forEach(m=>m.classList.add("hidden"));
+  if(document.fullscreenElement && document.exitFullscreen) { try{ document.exitFullscreen(); }catch(e){} }
+  showResult();
+}
+function reportText(){
+  const d = S.done, g = d.sec;
+  let t = `BÀI KIỂM TRA SỐ 1 - KẾT QUẢ\nHọ tên: ${S.name}\nLớp/Mã: ${S.cls||""}\nLần làm thứ: ${S.attempt||1}\nNộp lúc: ${d.at}\nLý do nộp: ${d.reason}\nThời gian làm: ${fmt(d.used)}\nSố lần vi phạm: ${S.viol}/${CFG.MAX_VIOLATIONS}\n`;
+  S.log.forEach(l=>{ t+=`  - ${l.t}: ${l.r}\n`; });
+  t += `\nĐiểm tự động: ${d.E} / ${d.M} (tổng tối đa của đề: ${TOTAL} điểm)\nPhần chờ GV chấm: ${d.P} câu\n\n`;
+  g.forEach(s=>{ t+=`${s.n}: ${s.e}/${s.m}${s.p?` (+${s.p} câu chờ GV)`:""}\n`; });
+  t += `\n===== BÀI LÀM CHI TIẾT =====\n`;
+  const a = S.ans;
+  B1.forEach((r,i)=>{ t+=`B1.${i+1} [${r[0]}] pinyin: ${a["b1p"+i]||""} | hán tự: ${a["b1h"+i]||""}\n`; });
+  B2.forEach((q,i)=>{ t+=`B2.${i+1} [${q}] → ${a["b2_"+i]||""}\n`; });
+  B3.forEach((q,i)=>{ t+=`B3.${i+1} → ${a["b3_"+i]!=null?LET[+a["b3_"+i]]:"(trống)"}\n`; });
+  B4.forEach((q,i)=>{ t+=`B4.${i+1} → ${a["b4_"+i]!=null?LET[+a["b4_"+i]]:"(trống)"}\n`; });
+  B5.forEach((q,i)=>{ t+=`B5.${i+1} → ${a["b5_"+i]||""}\n`; });
+  B6.forEach((q,i)=>{ t+=`B6.${i+1} → ${a["b6_"+i]||""}\n`; });
+  B7.forEach((q,i)=>{ t+=`B7.${i+1} → ${a["b7_"+i]||""}\n`; });
+  B8A.forEach((q,i)=>{ t+=`B8.${i+1} → ${a["b8a_"+i]||""}\n`; });
+  B8B.forEach((q,i)=>{ t+=`B9.${i+1} → ${a["b8b_"+i]||""}\n`; });
+  B10.forEach((q,i)=>{ t+=`B10.${i+1} → ${a["b10_"+i]!=null?LET[+a["b10_"+i]]:"(trống)"}\n`; });
+  return t;
+}
+function showResult(){
+  $("bar").classList.add("hidden"); $("exam").classList.add("hidden"); $("start").classList.add("hidden"); $("prog").classList.add("hidden");
+  const d = S.done;
+  let h = `<h1>Đã nộp bài ✔</h1><p class="sub">${esc(S.name)}${S.cls?" · "+esc(S.cls):""}</p>
+  <p><strong>Lý do nộp:</strong> ${esc(d.reason)}<br><strong>Thời gian làm:</strong> ${fmt(d.used)} · <strong>Vi phạm:</strong> ${S.viol}/${CFG.MAX_VIOLATIONS}</p>`;
+  if(CFG.SHOW_SCORE_TO_STUDENT){
+    h += `<div class="big">${d.E} <span style="font-size:20px;color:var(--muted)">/ ${d.M} điểm (chấm tự động)</span></div>
+    <p class="note">${d.P?`Còn ${d.P} câu do giáo viên chấm (Bài 2, và các câu cần xem lại). `:""}Tổng điểm tối đa của đề: ${TOTAL}. Điểm chính thức do giáo viên công bố.</p>
+    <table class="res"><tr><th>Phần</th><th>Điểm</th></tr>${d.sec.map(s=>`<tr><td>${esc(s.n)}</td><td>${s.e}/${s.m}${s.p?` <span class="note">(+${s.p} chờ GV)</span>`:""}</td></tr>`).join("")}</table>`;
+  }
+  h += `<p style="margin-top:16px"><button class="btn" id="btnDl">Tải file bài làm (.txt) để nộp cho giáo viên</button>
+  <button class="btn2" id="btnCp">Sao chép nội dung</button></p>
+  <p class="note">Hãy gửi file bài làm cho giáo viên theo hướng dẫn của lớp.</p>
+  <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+  <p><button class="btn2" id="btnRetake">↻ Làm lại bài (90 phút mới)</button></p>
+  <p class="note">Làm lại sẽ xoá bài làm hiện tại trên trình duyệt này, hãy tải file bài làm trước.</p>`;
+  $("result").innerHTML = h; $("result").classList.remove("hidden");
+  $("btnDl").onclick = ()=>{
+    const blob = new Blob(["\ufeff"+reportText()],{type:"text/plain;charset=utf-8"});
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "bai-lam-"+S.name.replace(/\s+/g,"_")+".txt"; a.click();
+  };
+  $("btnRetake").onclick = ()=>{
+    try{ localStorage.removeItem(CFG.EXAM_ID); }catch(e){}
+    location.reload();
+  };
+  $("btnCp").onclick = ()=>{
+    const t = reportText();
+    if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>{$("btnCp").textContent="Đã sao chép ✔";});
+  };
+  window.scrollTo(0,0);
+}
+
+/* ================= KHỞI ĐỘNG ================= */
+function beginExam(){
+  buildExam(); restore();
+  $("start").classList.add("hidden"); $("exam").classList.remove("hidden");
+  $("bar").classList.remove("hidden"); $("prog").classList.remove("hidden");
+  $("barName").textContent = S.name; setBadge();
+  document.querySelectorAll("#exam [data-id]").forEach(el=>{
+    el.addEventListener("input",persist); el.addEventListener("change",persist);
+  });
+  $("btnSubmit").onclick = ()=>{
+    const a = collect(); const ids = new Set(); document.querySelectorAll("#exam [data-id]").forEach(e=>ids.add(e.dataset.id));
+    let blank=0; ids.forEach(id=>{ if(!a[id]||!String(a[id]).trim()) blank++; });
+    $("mcText").innerHTML = blank? `Bạn còn <strong>${blank}</strong> ô chưa làm. Bạn có chắc chắn muốn nộp bài?` : "Bạn đã làm hết các câu. Xác nhận nộp bài?";
+    $("mConfirm").classList.remove("hidden");
+  };
+  started = true; away = false; lastViol = Date.now(); updateProg(); runTimer();
+}
+$("btnStart").onclick = ()=>{
+  const name = $("fName").value.trim();
+  if(name.length<2){ $("startMsg").textContent="Vui lòng nhập họ và tên."; $("fName").focus(); return; }
+  let attempt = 1;
+  try{
+    attempt = (+localStorage.getItem(CFG.EXAM_ID+"-n")||0)+1;
+    localStorage.setItem(CFG.EXAM_ID+"-n", attempt);
+    localStorage.setItem(CFG.EXAM_ID+"-name", JSON.stringify({name, cls:$("fClass").value.trim()}));
+  }catch(e){}
+  S = {name, attempt, cls:$("fClass").value.trim(), startAt:Date.now(), endAt:Date.now()+CFG.DURATION_SEC*1000, viol:0, log:[], ans:{}};
+  LS.set(S); enterFS(); beginExam();
+};
+$("mwBtn").onclick = ()=>{ $("mWarn").classList.add("hidden"); if(!document.fullscreenElement) enterFS(); away=false; };
+$("mcNo").onclick = ()=>{ $("mConfirm").classList.add("hidden"); };
+$("mcYes").onclick = ()=>{ submit("Học viên tự nộp bài"); };
+
+/* Khôi phục phiên cũ (tải lại trang) */
+(function init(){
+  const old = LS.get();
+  if(!old){
+    try{ const p = JSON.parse(localStorage.getItem(CFG.EXAM_ID+"-name")||"null");
+      if(p){ $("fName").value = p.name||""; $("fClass").value = p.cls||""; } }catch(e){}
+    return;
+  }
+  S = old;
+  if(S.done){ submitted = true; showResult(); return; }
+  // đang làm dở: tính 1 lần vi phạm do tải lại trang
+  S.viol++; S.log.push({t:new Date().toISOString(), r:"Tải lại / đóng trang"}); LS.set(S);
+  if(Date.now() >= S.endAt){ submit("Hết giờ làm bài"); return; }
+  if(S.viol >= CFG.MAX_VIOLATIONS){ buildExam(); submit("Vi phạm "+CFG.MAX_VIOLATIONS+" lần: Tải lại / đóng trang"); return; }
+  $("start").innerHTML = `<h1>Tiếp tục bài thi</h1><p>Học viên: <strong>${esc(S.name)}</strong><br>Bạn đã rời trang thi → tính <strong>${S.viol}/${CFG.MAX_VIOLATIONS}</strong> lần vi phạm. Đồng hồ vẫn chạy, còn lại <strong>${fmt(Math.round((S.endAt-Date.now())/1000))}</strong>.</p>
+  <button class="btn" id="btnResume">Tiếp tục làm bài</button>`;
+  $("btnResume").onclick = ()=>{ enterFS(); beginExam(); };
+})();
+</script>
+</body>
+</html>
